@@ -1,0 +1,18 @@
+{
+  "$schema": "https://wails.io/schemas/config.v2.json",
+  "name": "8board",
+  "outputfilename": "8board",
+  "frontend:install": "yarn",
+  "frontend:build": "yarn build",
+  "frontend:dev:watcher": "yarn dev",
+  "frontend:dev:serverUrl": "auto",
+  "author": {
+    "name": "luuhai48",
+    "email": "luuhai.hn48@gmail.com"
+  },
+  "wailsjsdir": "./frontend/src/lib",
+  "info": {
+    "productName": "8board",
+    "productVersion": "0.0.1"
+  }
+}
