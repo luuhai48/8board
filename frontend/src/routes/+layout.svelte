@@ -168,8 +168,8 @@
 		<h1>{$error}</h1>
 
 		<small class="text-xs">
-			<b>Note: </b>If you having issue running <b>kubectl</b>, try updating <b>PATH</b> variable in
-			config file at <i>~/.8board/config.json</i>
+			<b>Note: </b>If you having error, try updating <b>PATH</b> variable in config file at
+			<i>~/.8board/config.json</i>
 		</small>
 	</div>
 </Modal>
