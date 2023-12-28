@@ -39,6 +39,9 @@
 		sub = namespaces.subscribe(async (val) => {
 			if (val.namespaces?.length && $contexts.currentNamespace?.length) {
 				$loading = true;
+				secrets = [];
+				selectedSecret = undefined;
+
 				const res = await ListSecrets($contexts.currentNamespace);
 				if (res.err !== '') {
 					return promptError(res.err);
@@ -63,7 +66,7 @@
 		in:fly={{ x: 30, duration: 300 }}
 		out:fly={{ x: -30, duration: 300 }}
 	>
-		<h1 class="p-4 text-2xl font-bold text-gray-700">Secrets</h1>
+		<h1 class="p-4 text-2xl font-bold text-gray-700">Secrets ({secrets.length})</h1>
 		<div class="w-full p-3 pb-8">
 			<div class="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
 				<table class="w-full text-left text-sm text-gray-500 rtl:text-right">

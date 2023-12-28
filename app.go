@@ -135,7 +135,7 @@ func (a *App) GetContexts() GetContextsResponse {
 		return response
 	}
 
-	var contexts []ContextResponse
+	contexts := []ContextResponse{}
 	for _, context := range config.Contexts {
 		contexts = append(contexts, ContextResponse{
 			Name:      context.Cluster,
@@ -169,7 +169,7 @@ func (a *App) GetNamespaces() GetNamespacesResponse {
 		return response
 	}
 
-	var namespaces []string
+	namespaces := []string{}
 	for _, n := range apiResponse.Items {
 		namespaces = append(namespaces, n.Name)
 	}
@@ -218,7 +218,7 @@ func (a *App) ListSecrets(namespace string) ListSecretsResponse {
 		return response
 	}
 
-	var secrets []ListSecret
+	secrets := []ListSecret{}
 	for _, s := range apiResponse.Items {
 		secrets = append(secrets, ListSecret{
 			Name:       s.Name,
