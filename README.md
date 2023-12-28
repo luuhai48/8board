@@ -1,5 +1,7 @@
 # 8board - Useful utilities working with kubernetes
 
+![screenshot](./images/screenshot-1.jpg)
+
 ## How to use
 
 Clone the repo and compile it yourself.
