@@ -11,6 +11,7 @@ import (
 	"sort"
 
 	"github.com/tidwall/gjson"
+	coreV1 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/tools/clientcmd"
@@ -65,8 +66,10 @@ func (a *App) GetVersion() string {
 	return version.String()
 }
 
-var ClientConfig clientcmd.ClientConfig
-var ClientSet *kubernetes.Clientset
+var (
+	ClientConfig clientcmd.ClientConfig
+	ClientSet    *kubernetes.Clientset
+)
 
 func (a *App) ReloadConfig() string {
 	clientConfig := clientcmd.NewNonInteractiveDeferredLoadingClientConfig(
@@ -224,7 +227,7 @@ func (a *App) ListSecrets(namespace string) ListSecretsResponse {
 			Name:       s.Name,
 			Type:       string(s.Type),
 			CreatedAt:  s.CreationTimestamp,
-			LastUpdate: *s.ObjectMeta.ManagedFields[len(s.ObjectMeta.ManagedFields)-1].Time,
+			LastUpdate: *s.ManagedFields[len(s.ManagedFields)-1].Time,
 			Data:       len(s.Data),
 		})
 	}
@@ -263,5 +266,71 @@ func (a *App) ReadSecret(namespace string, secretName string) ReadSecretResponse
 		Metadata: secret.ObjectMeta,
 		Type:     string(secret.Type),
 	}
+	return response
+}
+
+type ListPod struct {
+	Name         string   `json:"name"`
+	CreatedAt    v1.Time  `json:"createdAt"`
+	LastUpdate   v1.Time  `json:"lastUpdate"`
+	Status       string   `json:"status"`
+	Ready        string   `json:"ready"`
+	Restarts     int      `json:"restarts"`
+	TerminatedAt *v1.Time `json:"terminatedAt,omitempty"`
+}
+
+type ListPodsResponse struct {
+	Err  string    `json:"err"`
+	Pods []ListPod `json:"pods"`
+}
+
+func (a *App) ListPods(namespace string) ListPodsResponse {
+	response := ListPodsResponse{}
+
+	apiResponse, err := ClientSet.CoreV1().Pods(namespace).List(context.Background(), v1.ListOptions{})
+	if err != nil {
+		response.Err = fmt.Sprintf("List pods error: %s", err.Error())
+	}
+
+	pods := []ListPod{}
+	for _, p := range apiResponse.Items {
+		status := string(p.Status.Phase)
+		if p.DeletionTimestamp != nil {
+			status = "Terminating"
+		}
+
+		ready := 0
+		restarts := 0
+		terminatedStates := []coreV1.ContainerState{}
+
+		for _, v := range p.Status.ContainerStatuses {
+			restarts += int(v.RestartCount)
+
+			if v.Ready {
+				ready += 1
+			}
+
+			if v.LastTerminationState.Terminated != nil {
+				terminatedStates = append(terminatedStates, v.LastTerminationState)
+			}
+		}
+
+		var terminatedAt *v1.Time
+		if len(terminatedStates) > 0 {
+			terminatedAt = &terminatedStates[len(terminatedStates)-1].Terminated.FinishedAt
+		}
+
+		pods = append(pods, ListPod{
+			Name:         p.Name,
+			CreatedAt:    p.CreationTimestamp,
+			LastUpdate:   *p.ManagedFields[len(p.ManagedFields)-1].Time,
+			Status:       status,
+			Ready:        fmt.Sprintf("%d/%d", ready, len(p.Status.ContainerStatuses)),
+			Restarts:     restarts,
+			TerminatedAt: terminatedAt,
+		})
+	}
+
+	response.Pods = pods
 	return response
 }
