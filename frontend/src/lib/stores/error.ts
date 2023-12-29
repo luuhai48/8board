@@ -1,3 +1,11 @@
 import { writable } from 'svelte/store';
+import loading from './loading';
 
-export default writable('');
+const error = writable('');
+
+const promptError = (err: string) => {
+	error.set(err);
+	loading.set(false);
+};
+
+export { error, promptError };

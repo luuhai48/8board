@@ -11,14 +11,16 @@
 		SetCurrentContext,
 		SetCurrentNamespace
 	} from '$lib/wailsjs/go/main/App.js';
+	import { page } from '$app/stores';
 
 	import Modal from '$lib/components/modal.svelte';
 	import Spinner from '$lib/components/spinner.svelte';
 
 	import contexts from '$lib/stores/contexts';
 	import namespaces from '$lib/stores/namespaces';
-	import error from '$lib/stores/error';
+	import { error } from '$lib/stores/error';
 	import loading from '$lib/stores/loading';
+	import { goto } from '$app/navigation';
 
 	let version = '';
 	GetVersion().then((v) => {
@@ -70,6 +72,7 @@
 		$namespaces = {
 			namespaces: ns.namespaces
 		};
+		goto('/');
 		$loading = false;
 	};
 
@@ -151,6 +154,15 @@
 				>
 			{/each}
 		</select>
+
+		<div class="mt-8 space-y-4">
+			<a
+				href="/secrets"
+				class={'trasition-all block rounded-lg px-2 py-1.5 hover:bg-gray-100 ' +
+					($page.url.pathname.startsWith('/secrets') ? 'bg-gray-100 hover:bg-gray-200' : '')}
+				>Secrets</a
+			>
+		</div>
 	</div>
 
 	<div
