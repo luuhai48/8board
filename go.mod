@@ -5,6 +5,7 @@ go 1.21
 toolchain go1.21.5
 
 require (
+	github.com/fynelabs/selfupdate v0.2.0
 	github.com/tidwall/gjson v1.17.0
 	github.com/wailsapp/wails/v2 v2.7.1
 	k8s.io/api v0.29.0
