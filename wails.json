@@ -13,6 +13,6 @@
   "wailsjsdir": "./frontend/src/lib",
   "info": {
     "productName": "8board",
-    "productVersion": "0.0.2"
+    "productVersion": "0.0.3"
   }
 }
