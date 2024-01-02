@@ -3,6 +3,6 @@
 	import { onMount } from 'svelte';
 
 	onMount(() => {
-		goto('/secrets');
+		goto('/pods');
 	});
 </script>
