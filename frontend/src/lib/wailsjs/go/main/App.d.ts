@@ -8,6 +8,8 @@ export function GetNamespaces():Promise<main.GetNamespacesResponse>;
 
 export function GetVersion():Promise<string>;
 
+export function ListPods(arg1:string):Promise<main.ListPodsResponse>;
+
 export function ListSecrets(arg1:string):Promise<main.ListSecretsResponse>;
 
 export function ReadSecret(arg1:string,arg2:string):Promise<main.ReadSecretResponse>;

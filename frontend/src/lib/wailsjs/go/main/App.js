@@ -14,6 +14,10 @@ export function GetVersion() {
   return window['go']['main']['App']['GetVersion']();
 }
 
+export function ListPods(arg1) {
+  return window['go']['main']['App']['ListPods'](arg1);
+}
+
 export function ListSecrets(arg1) {
   return window['go']['main']['App']['ListSecrets'](arg1);
 }

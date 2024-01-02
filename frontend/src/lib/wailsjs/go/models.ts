@@ -62,6 +62,83 @@ export namespace main {
 	        this.err = source["err"];
 	    }
 	}
+	export class ListPod {
+	    name: string;
+	    // Go type: v1
+	    createdAt: any;
+	    // Go type: v1
+	    lastUpdate: any;
+	    status: string;
+	    ready: string;
+	    restarts: number;
+	    // Go type: v1
+	    terminatedAt?: any;
+	
+	    static createFrom(source: any = {}) {
+	        return new ListPod(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.name = source["name"];
+	        this.createdAt = this.convertValues(source["createdAt"], null);
+	        this.lastUpdate = this.convertValues(source["lastUpdate"], null);
+	        this.status = source["status"];
+	        this.ready = source["ready"];
+	        this.restarts = source["restarts"];
+	        this.terminatedAt = this.convertValues(source["terminatedAt"], null);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
+	export class ListPodsResponse {
+	    err: string;
+	    pods: ListPod[];
+	
+	    static createFrom(source: any = {}) {
+	        return new ListPodsResponse(source);
+	    }
+	
+	    constructor(source: any = {}) {
+	        if ('string' === typeof source) source = JSON.parse(source);
+	        this.err = source["err"];
+	        this.pods = this.convertValues(source["pods"], ListPod);
+	    }
+	
+		convertValues(a: any, classs: any, asMap: boolean = false): any {
+		    if (!a) {
+		        return a;
+		    }
+		    if (a.slice) {
+		        return (a as any[]).map(elem => this.convertValues(elem, classs));
+		    } else if ("object" === typeof a) {
+		        if (asMap) {
+		            for (const key of Object.keys(a)) {
+		                a[key] = new classs(a[key]);
+		            }
+		            return a;
+		        }
+		        return new classs(a);
+		    }
+		    return a;
+		}
+	}
 	export class ListSecret {
 	    name: string;
 	    type: string;

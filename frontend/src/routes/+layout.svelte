@@ -155,11 +155,19 @@
 			{/each}
 		</select>
 
+		<hr class="mt-8 h-[1px] w-full bg-gray-100" />
+
 		<div class="mt-8 space-y-4">
+			<a
+				href="/pods"
+				class={'trasition-all block rounded-lg px-2 py-1.5 hover:bg-gray-100 ' +
+					($page.url.pathname.startsWith('/pods') ? 'pointer-events-none bg-gray-100' : '')}>Pods</a
+			>
+
 			<a
 				href="/secrets"
 				class={'trasition-all block rounded-lg px-2 py-1.5 hover:bg-gray-100 ' +
-					($page.url.pathname.startsWith('/secrets') ? 'bg-gray-100 hover:bg-gray-200' : '')}
+					($page.url.pathname.startsWith('/secrets') ? 'pointer-events-none bg-gray-100' : '')}
 				>Secrets</a
 			>
 		</div>
