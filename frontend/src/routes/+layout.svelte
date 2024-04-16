@@ -126,7 +126,7 @@
 		<label for="contexts" class="mt-4 block text-sm font-semibold">Context</label>
 		<select
 			id="contexts"
-			class="mt-2 w-full cursor-pointer appearance-none rounded-md border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-gray-900 shadow-md"
+			class="mt-2 w-full cursor-pointer appearance-none rounded-md border border-gray-300 bg-gray-100 px-2.5 py-1.5 text-gray-900 shadow-md"
 			on:change={selectContext}
 		>
 			<option value="" disabled selected>-- Context --</option>
@@ -142,7 +142,7 @@
 		<label for="contexts" class="mt-6 block text-sm font-semibold">Namespace</label>
 		<select
 			id="contexts"
-			class="mt-2 w-full cursor-pointer appearance-none rounded-md border border-gray-300 bg-gray-50 px-2.5 py-1.5 text-gray-900 shadow-md"
+			class="mt-2 w-full cursor-pointer appearance-none rounded-md border border-gray-300 bg-gray-100 px-2.5 py-1.5 text-gray-900 shadow-md"
 			on:change={selectNamespace}
 		>
 			<option value="" disabled selected>-- Namespace --</option>
@@ -159,16 +159,16 @@
 
 		<div class="mt-8 space-y-4">
 			<a
-				href="/pods"
-				class={'trasition-all block rounded-lg px-2 py-1.5 hover:bg-gray-100 ' +
-					($page.url.pathname.startsWith('/pods') ? 'pointer-events-none bg-gray-100' : '')}>Pods</a
-			>
-
-			<a
 				href="/secrets"
 				class={'trasition-all block rounded-lg px-2 py-1.5 hover:bg-gray-100 ' +
 					($page.url.pathname.startsWith('/secrets') ? 'pointer-events-none bg-gray-100' : '')}
 				>Secrets</a
+			>
+
+			<a
+				href="/pods"
+				class={'trasition-all block rounded-lg px-2 py-1.5 hover:bg-gray-100 ' +
+					($page.url.pathname.startsWith('/pods') ? 'pointer-events-none bg-gray-100' : '')}>Pods</a
 			>
 		</div>
 	</div>
@@ -187,7 +187,7 @@
 	<div class="pt-5">
 		<h1>{$error}</h1>
 
-		<small class="text-xs">
+		<small class="mt-5 text-xs">
 			<b>Note: </b>If you having error, try updating <b>PATH</b> variable in config file at
 			<i>~/.8board/config.json</i>
 		</small>

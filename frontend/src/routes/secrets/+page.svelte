@@ -14,7 +14,9 @@
 	import { promptError } from '$lib/stores/error';
 	import { goto } from '$app/navigation';
 
-	let secrets: main.ListSecretsResponse['secrets'] = [];
+	let secrets: (main.ListSecretsResponse['secrets'][0] & {
+		hide?: boolean;
+	})[] = [];
 
 	let sub: Unsubscriber | undefined;
 	onMount(() => {
@@ -39,6 +41,15 @@
 			sub = undefined;
 		}
 	});
+
+	const filterSecrets = (e: Event & { currentTarget: HTMLInputElement }) => {
+		const search = e.currentTarget.value.toLowerCase();
+		const clone = [...secrets];
+		clone.forEach((secret) => {
+			secret.hide = !secret.name.toLowerCase().includes(search);
+		});
+		secrets = clone;
+	};
 </script>
 
 <div
@@ -48,9 +59,19 @@
 >
 	<h1 class="p-4 text-2xl font-bold text-gray-700">Secrets ({secrets.length})</h1>
 	<div class="w-full p-3 pb-8">
+		<div class="mb-5 w-full">
+			<input
+				type="search"
+				id="search"
+				class="w-80 rounded bg-gray-100 px-2 py-1 text-sm outline-none"
+				placeholder="Search secret name"
+				on:input={filterSecrets}
+			/>
+		</div>
+
 		<div class="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
 			<table class="w-full text-left text-sm text-gray-500 rtl:text-right">
-				<thead class="bg-gray-50 text-xs uppercase text-gray-700">
+				<thead class="bg-gray-100 text-xs uppercase text-gray-700">
 					<tr>
 						<th scope="col" class="p-4"></th>
 						<th scope="col" class="px-6 py-3">Name</th>
@@ -63,7 +84,7 @@
 				</thead>
 				<tbody>
 					{#each secrets as secret, idx}
-						<tr class="border-b bg-white hover:bg-gray-50">
+						<tr class={'border-b bg-white hover:bg-gray-100 ' + (secret.hide ? 'hidden' : '')}>
 							<td class="w-4 p-4">
 								{idx + 1}
 							</td>

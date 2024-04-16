@@ -14,7 +14,9 @@
 	import loading from '$lib/stores/loading';
 	import { promptError } from '$lib/stores/error';
 
-	let pods: main.ListPodsResponse['pods'] = [];
+	let pods: (main.ListPodsResponse['pods'][0] & {
+		hide?: boolean;
+	})[] = [];
 
 	let autorefresh = false;
 	let autorefreshTimeout = 5000;
@@ -72,6 +74,15 @@
 		}
 		clearAutoRefresh();
 	});
+
+	const filterPods = (e: Event & { currentTarget: HTMLInputElement }) => {
+		const search = e.currentTarget.value.toLowerCase();
+		const clone = [...pods];
+		clone.forEach((secret) => {
+			secret.hide = !secret.name.toLowerCase().includes(search);
+		});
+		pods = clone;
+	};
 </script>
 
 <div
@@ -81,32 +92,44 @@
 >
 	<div class="flex items-center">
 		<h1 class="p-4 text-2xl font-bold text-gray-700">Pods ({pods.length})</h1>
-		<div class="ml-auto w-32 p-2">
+		<div class="ml-auto w-44 p-2">
 			<div class="flex items-center gap-1">
 				<label for="autorefresh" class="cursor-pointer select-none">Auto Refresh</label>
 				<input
 					type="checkbox"
 					name="autorefresh"
 					id="autorefresh"
+					class="h-5 w-5 outline-none"
 					bind:checked={autorefresh}
 					on:input={autoRefreshChange}
 				/>
 			</div>
-			<div class="top-full border">
+			<div class="top-full rounded border">
 				<input
 					type="number"
-					class="w-full"
+					class="w-full rounded px-2 py-0.5 outline-none"
 					bind:value={autorefreshTimeout}
 					on:input={startAutoRefresh}
 					min={2000}
+					placeholder="Milliseconds"
 				/>
 			</div>
 		</div>
 	</div>
 	<div class="w-full p-3 pb-8">
+		<div class="mb-5 w-full">
+			<input
+				type="search"
+				id="search"
+				class="w-80 rounded bg-gray-100 px-2 py-1 text-sm outline-none"
+				placeholder="Search pod name"
+				on:input={filterPods}
+			/>
+		</div>
+
 		<div class="relative w-full overflow-x-auto shadow-md sm:rounded-lg">
 			<table class="w-full text-left text-sm text-gray-500 rtl:text-right">
-				<thead class="bg-gray-50 text-xs uppercase text-gray-700">
+				<thead class="bg-gray-100 text-xs uppercase text-gray-700">
 					<tr>
 						<th scope="col" class="p-4"></th>
 						<th scope="col" class="px-6 py-3">Name</th>
@@ -120,7 +143,7 @@
 				</thead>
 				<tbody>
 					{#each pods as pod, idx}
-						<tr class="border-b bg-white hover:bg-gray-50">
+						<tr class={'border-b bg-white hover:bg-gray-100 ' + (pod.hide ? 'hidden' : '')}>
 							<td class="w-4 p-4">
 								{idx + 1}
 							</td>
